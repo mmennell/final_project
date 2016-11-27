@@ -1,5 +1,7 @@
 ActiveAdmin.register Job do
 
+ permit_params :start_time, :end_time, :role_id, :hourly_rate, :staff_id, :approved
+
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
