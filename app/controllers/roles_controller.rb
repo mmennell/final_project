@@ -1,6 +1,6 @@
 class RolesController < ApplicationController
   def index
-    @roles = Role.all
+    @roles = Role.page(params[:page]).per(10)
 
     render("roles/index.html.erb")
   end
