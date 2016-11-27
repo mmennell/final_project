@@ -1,6 +1,9 @@
 class Restaurant < ApplicationRecord
   # Direct associations
 
+  has_many   :roles,
+             :dependent => :destroy
+
   has_many   :staffs,
              :foreign_key => "home_restaurant_id",
              :dependent => :nullify
