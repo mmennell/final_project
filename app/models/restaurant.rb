@@ -5,4 +5,6 @@ class Restaurant < ApplicationRecord
 
   # Validations
 
+  validates :restaurant_name, :uniqueness => { :scope => [:address] }
+
 end
