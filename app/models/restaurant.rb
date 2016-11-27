@@ -13,6 +13,10 @@ class Restaurant < ApplicationRecord
 
   # Indirect associations
 
+  has_many   :shifts,
+             :through => :roles,
+             :source => :jobs
+
   # Validations
 
   validates :restaurant_name, :uniqueness => { :scope => [:address] }

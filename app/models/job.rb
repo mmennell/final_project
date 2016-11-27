@@ -8,6 +8,10 @@ class Job < ApplicationRecord
 
   # Indirect associations
 
+  has_one    :restaurant,
+             :through => :role,
+             :source => :restaurant
+
   # Validations
 
 end
