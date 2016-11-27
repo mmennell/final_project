@@ -18,13 +18,25 @@
       <dd><%= @staff.avatar_url %></dd>
 
       <dt>Home restaurant</dt>
-      <dd><%= @staff.home_restaurant_id %></dd>
+      <dd>
+        <% if @staff.home_restaurant.present? %>
+          <a href="/restaurants/<%= @staff.home_restaurant_id %>">
+            <%= @staff.home_restaurant.restaurant_name %>
+          </a>
+        <% end %>
+      </dd>
 
       <dt>Role</dt>
       <dd><%= @staff.role_id %></dd>
 
       <dt>User</dt>
-      <dd><%= @staff.user_id %></dd>
+      <dd>
+        <% if @staff.user.present? %>
+          <a href="/users/<%= @staff.user_id %>">
+            <%= @staff.user.email %>
+          </a>
+        <% end %>
+      </dd>
 
       <dt>Verified</dt>
       <dd><%= @staff.verified %></dd>

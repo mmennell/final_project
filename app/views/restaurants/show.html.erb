@@ -30,7 +30,13 @@
       <dd><%= @restaurant.contact_telephone %></dd>
 
       <dt>User</dt>
-      <dd><%= @restaurant.user_id %></dd>
+      <dd>
+        <% if @restaurant.user.present? %>
+          <a href="/users/<%= @restaurant.user_id %>">
+            <%= @restaurant.user.email %>
+          </a>
+        <% end %>
+      </dd>
 
       <dt>Verified</dt>
       <dd><%= @restaurant.verified %></dd>

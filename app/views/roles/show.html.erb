@@ -12,7 +12,13 @@
       <dd><%= @role.description %></dd>
 
       <dt>Restaurant</dt>
-      <dd><%= @role.restaurant_id %></dd>
+      <dd>
+        <% if @role.restaurant.present? %>
+          <a href="/restaurants/<%= @role.restaurant_id %>">
+            <%= @role.restaurant.restaurant_name %>
+          </a>
+        <% end %>
+      </dd>
 
     </dl>
 

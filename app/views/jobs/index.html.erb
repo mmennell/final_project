@@ -22,9 +22,21 @@
       <tr>
         <td><%= job.start_time %></td>
         <td><%= job.end_time %></td>
-        <td><%= job.role.role_name %></td>
+        <td>
+          <% if job.role.present? %>
+            <a href="/roles/<%= job.role.id %>">
+              <%= job.role.role_name %>
+            </a>
+          <% end %>
+        </td>
         <td><%= job.hourly_rate %></td>
-        <td><%= job.staff.first_name %></td>
+        <td>
+          <% if job.staff.present? %>
+            <a href="/staffs/<%= job.staff.id %>">
+              <%= job.staff.first_name %>
+            </a>
+          <% end %>
+        </td>
         <td><%= job.approved %></td>
         <td>
           <a href="/jobs/<%= job.id %>" class="btn btn-primary">Show</a>

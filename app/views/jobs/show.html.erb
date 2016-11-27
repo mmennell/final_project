@@ -12,13 +12,25 @@
       <dd><%= @job.end_time %></dd>
 
       <dt>Role</dt>
-      <dd><%= @job.role_id %></dd>
+      <dd>
+        <% if @job.role.present? %>
+          <a href="/roles/<%= @job.role_id %>">
+            <%= @job.role.role_name %>
+          </a>
+        <% end %>
+      </dd>
 
       <dt>Hourly rate</dt>
       <dd><%= @job.hourly_rate %></dd>
 
       <dt>Staff</dt>
-      <dd><%= @job.staff_id %></dd>
+      <dd>
+        <% if @job.staff.present? %>
+          <a href="/staffs/<%= @job.staff_id %>">
+            <%= @job.staff.first_name %>
+          </a>
+        <% end %>
+      </dd>
 
       <dt>Approved</dt>
       <dd><%= @job.approved %></dd>

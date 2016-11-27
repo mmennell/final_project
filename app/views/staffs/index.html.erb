@@ -26,9 +26,21 @@
         <td><%= staff.last_name %></td>
         <td><%= staff.contact_telephone %></td>
         <td><%= staff.avatar_url %></td>
-        <td><%= staff.home_restaurant.restaurant_name %></td>
+        <td>
+          <% if staff.home_restaurant.present? %>
+            <a href="/restaurants/<%= staff.home_restaurant.id %>">
+              <%= staff.home_restaurant.restaurant_name %>
+            </a>
+          <% end %>
+        </td>
         <td><%= staff.role_id %></td>
-        <td><%= staff.user.email %></td>
+        <td>
+          <% if staff.user.present? %>
+            <a href="/users/<%= staff.user.id %>">
+              <%= staff.user.email %>
+            </a>
+          <% end %>
+        </td>
         <td><%= staff.verified %></td>
         <td>
           <a href="/staffs/<%= staff.id %>" class="btn btn-primary">Show</a>
