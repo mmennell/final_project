@@ -1,4 +1,14 @@
 class StaffsController < ApplicationController
+  before_action :current_user_must_be_staff_user, :only => [:edit, :update, :destroy]
+
+  def current_user_must_be_staff_user
+    staff = Staff.find(params[:id])
+
+    unless current_user == staff.user
+      redirect_to :back, :alert => "You are not authorized for that."
+    end
+  end
+
   def index
     @staffs = Staff.all
 
