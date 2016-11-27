@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  root :to => "restaurants#index"
   # Routes for the Job resource:
   # CREATE
   get "/jobs/new", :controller => "jobs", :action => "new"
