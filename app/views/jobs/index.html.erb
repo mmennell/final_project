@@ -24,7 +24,7 @@
         <td><%= job.end_time %></td>
         <td><%= job.role.role_name %></td>
         <td><%= job.hourly_rate %></td>
-        <td><%= job.staff_id %></td>
+        <td><%= job.staff.first_name %></td>
         <td><%= job.approved %></td>
         <td>
           <a href="/jobs/<%= job.id %>" class="btn btn-primary">Show</a>
