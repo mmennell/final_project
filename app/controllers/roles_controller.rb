@@ -1,6 +1,7 @@
 class RolesController < ApplicationController
   def index
-    @roles = Role.page(params[:page]).per(10)
+    @q = Role.ransack(params[:q])
+    @roles = @q.result(:distinct => true).includes(:restaurant, :jobs).page(params[:page]).per(10)
 
     render("roles/index.html.erb")
   end
