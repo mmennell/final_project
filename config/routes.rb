@@ -1,4 +1,21 @@
 Rails.application.routes.draw do
+  # Routes for the Role resource:
+  # CREATE
+  get "/roles/new", :controller => "roles", :action => "new"
+  post "/create_role", :controller => "roles", :action => "create"
+
+  # READ
+  get "/roles", :controller => "roles", :action => "index"
+  get "/roles/:id", :controller => "roles", :action => "show"
+
+  # UPDATE
+  get "/roles/:id/edit", :controller => "roles", :action => "edit"
+  post "/update_role/:id", :controller => "roles", :action => "update"
+
+  # DELETE
+  get "/delete_role/:id", :controller => "roles", :action => "destroy"
+  #------------------------------
+
   # Routes for the Staff resource:
   # CREATE
   get "/staffs/new", :controller => "staffs", :action => "new"

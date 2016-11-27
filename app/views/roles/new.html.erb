@@ -1,0 +1,55 @@
+<!-- Validation failure messages -->
+<% if @role.errors.any? %>
+  <% @role.errors.full_messages.each do |message| %>
+    <div class="alert alert-dismissable alert-danger">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <%= message %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="page-header">
+  <h3>Add Role</h3>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form action="/create_role" method="post">
+      <!-- Hidden input for authenticity token to protect from forgery -->
+      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+      <!-- Label and input for role_name -->
+      <div class="form-group">
+        <label for="role_name" class="control-label">
+          Role name
+        </label>
+
+        <input type="text" id="role_name" name="role_name" placeholder="Role name" class="form-control" value="<%= @role.role_name %>">
+      </div>
+
+      <!-- Label and input for description -->
+      <div class="form-group">
+        <label for="description" class="control-label">
+          Description
+        </label>
+
+        <input type="text" id="description" name="description" placeholder="Description" class="form-control" value="<%= @role.description %>">
+      </div>
+
+      <!-- Label and input for restaurant_id -->
+      <div class="form-group">
+        <label for="restaurant_id" class="control-label">
+          Restaurant
+        </label>
+
+        <input type="text" id="restaurant_id" name="restaurant_id" placeholder="Restaurant" class="form-control" value="<%= @role.restaurant_id %>">
+      </div>
+
+      <button class="btn btn-success">
+        Create Role
+      </button>
+      or
+      <a href="/roles">Cancel</a>
+    </form>
+  </div>
+</div>
