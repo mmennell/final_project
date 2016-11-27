@@ -1,0 +1,81 @@
+<!-- Validation failure messages -->
+<% if @job.errors.any? %>
+  <% @job.errors.full_messages.each do |message| %>
+    <div class="alert alert-dismissable alert-danger">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <%= message %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="page-header">
+  <h3>Add Job</h3>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form action="/create_job" method="post">
+      <!-- Hidden input for authenticity token to protect from forgery -->
+      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+      <!-- Label and input for start_time -->
+      <div class="form-group">
+        <label for="start_time" class="control-label">
+          Start time
+        </label>
+
+        <input type="text" id="start_time" name="start_time" placeholder="Start time" class="form-control" value="<%= @job.start_time %>">
+      </div>
+
+      <!-- Label and input for end_time -->
+      <div class="form-group">
+        <label for="end_time" class="control-label">
+          End time
+        </label>
+
+        <input type="text" id="end_time" name="end_time" placeholder="End time" class="form-control" value="<%= @job.end_time %>">
+      </div>
+
+      <!-- Label and input for role_id -->
+      <div class="form-group">
+        <label for="role_id" class="control-label">
+          Role
+        </label>
+
+        <input type="text" id="role_id" name="role_id" placeholder="Role" class="form-control" value="<%= @job.role_id %>">
+      </div>
+
+      <!-- Label and input for hourly_rate -->
+      <div class="form-group">
+        <label for="hourly_rate" class="control-label">
+          Hourly rate
+        </label>
+
+        <input type="text" id="hourly_rate" name="hourly_rate" placeholder="Hourly rate" class="form-control" value="<%= @job.hourly_rate %>">
+      </div>
+
+      <!-- Label and input for staff_id -->
+      <div class="form-group">
+        <label for="staff_id" class="control-label">
+          Staff
+        </label>
+
+        <input type="text" id="staff_id" name="staff_id" placeholder="Staff" class="form-control" value="<%= @job.staff_id %>">
+      </div>
+
+      <!-- Label and input for approved -->
+      <div class="checkbox">
+        <label for="approved">
+          <input type="checkbox" id="approved" name="approved" value="1" <%= "checked" if @job.approved %>>
+          Approved
+        </label>
+      </div>
+
+      <button class="btn btn-success">
+        Create Job
+      </button>
+      or
+      <a href="/jobs">Cancel</a>
+    </form>
+  </div>
+</div>

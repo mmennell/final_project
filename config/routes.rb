@@ -1,4 +1,21 @@
 Rails.application.routes.draw do
+  # Routes for the Job resource:
+  # CREATE
+  get "/jobs/new", :controller => "jobs", :action => "new"
+  post "/create_job", :controller => "jobs", :action => "create"
+
+  # READ
+  get "/jobs", :controller => "jobs", :action => "index"
+  get "/jobs/:id", :controller => "jobs", :action => "show"
+
+  # UPDATE
+  get "/jobs/:id/edit", :controller => "jobs", :action => "edit"
+  post "/update_job/:id", :controller => "jobs", :action => "update"
+
+  # DELETE
+  get "/delete_job/:id", :controller => "jobs", :action => "destroy"
+  #------------------------------
+
   # Routes for the Role resource:
   # CREATE
   get "/roles/new", :controller => "roles", :action => "new"

@@ -1,0 +1,40 @@
+<div class="page-header">
+  <h3>Job #<%= @job.id %></h3>
+</div>
+
+<div class="row">
+  <div class="col-md-12 mb-2">
+    <dl class="dl-horizontal">
+      <dt>Start time</dt>
+      <dd><%= @job.start_time %></dd>
+
+      <dt>End time</dt>
+      <dd><%= @job.end_time %></dd>
+
+      <dt>Role</dt>
+      <dd><%= @job.role_id %></dd>
+
+      <dt>Hourly rate</dt>
+      <dd><%= @job.hourly_rate %></dd>
+
+      <dt>Staff</dt>
+      <dd><%= @job.staff_id %></dd>
+
+      <dt>Approved</dt>
+      <dd><%= @job.approved %></dd>
+
+    </dl>
+
+    <div class="btn-group btn-group-justified">
+      <a href="/jobs" class="btn btn-primary">
+        Back
+      </a>
+      <a href="/jobs/<%= @job.id %>/edit" class="btn btn-warning">
+        Edit
+      </a>
+      <a href="/delete_job/<%= @job.id %>" class="btn btn-danger" rel="nofollow">
+        Delete
+      </a>
+    </div>
+  </div>
+</div>
