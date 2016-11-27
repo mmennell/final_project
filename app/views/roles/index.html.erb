@@ -19,7 +19,7 @@
       <tr>
         <td><%= role.role_name %></td>
         <td><%= role.description %></td>
-        <td><%= role.restaurant_id %></td>
+        <td><%= role.restaurant.restaurant_name %></td>
         <td>
           <a href="/roles/<%= role.id %>" class="btn btn-primary">Show</a>
           <a href="/roles/<%= role.id %>/edit" class="btn btn-warning">Edit</a>
