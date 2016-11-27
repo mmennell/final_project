@@ -42,7 +42,7 @@
           Restaurant
         </label>
 
-        <input type="text" id="restaurant_id" name="restaurant_id" placeholder="Restaurant" class="form-control" value="<%= @role.restaurant_id %>">
+        <%= select_tag(:restaurant_id, options_from_collection_for_select(Restaurant.all, :id, :restaurant_name, @role.restaurant_id), :class => "form-control") %>
       </div>
 
       <button class="btn btn-warning">
