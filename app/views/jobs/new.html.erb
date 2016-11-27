@@ -60,7 +60,7 @@
           Staff
         </label>
 
-        <input type="text" id="staff_id" name="staff_id" placeholder="Staff" class="form-control" value="<%= @job.staff_id %>">
+        <%= select_tag(:staff_id, options_from_collection_for_select(Staff.all, :id, :first_name, @job.staff_id), :class => "form-control") %>
       </div>
 
       <!-- Label and input for approved -->
