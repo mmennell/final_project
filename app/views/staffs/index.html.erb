@@ -1,0 +1,42 @@
+<div class="page-header">
+  <h1>
+    Staffs
+    <a href="/staffs/new" class="btn btn-lg btn-success">New Staff</a>
+  </h1>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-striped table-hover">
+      <tr>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>Contact telephone</th>
+        <th>Avatar url</th>
+        <th>Home restaurant</th>
+        <th>Role</th>
+        <th>User</th>
+        <th>Verified</th>
+        <th>Actions</th>
+      </tr>
+
+      <% @staffs.each do |staff| %>
+      <tr>
+        <td><%= staff.first_name %></td>
+        <td><%= staff.last_name %></td>
+        <td><%= staff.contact_telephone %></td>
+        <td><%= staff.avatar_url %></td>
+        <td><%= staff.home_restaurant_id %></td>
+        <td><%= staff.role_id %></td>
+        <td><%= staff.user_id %></td>
+        <td><%= staff.verified %></td>
+        <td>
+          <a href="/staffs/<%= staff.id %>" class="btn btn-primary">Show</a>
+          <a href="/staffs/<%= staff.id %>/edit" class="btn btn-warning">Edit</a>
+          <a href="/delete_staff/<%= staff.id %>" class="btn btn-danger" rel="nofollow">Delete</a>
+        </td>
+      </tr>
+      <% end %>
+    </table>
+  </div>
+</div>

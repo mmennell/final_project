@@ -1,4 +1,21 @@
 Rails.application.routes.draw do
+  # Routes for the Staff resource:
+  # CREATE
+  get "/staffs/new", :controller => "staffs", :action => "new"
+  post "/create_staff", :controller => "staffs", :action => "create"
+
+  # READ
+  get "/staffs", :controller => "staffs", :action => "index"
+  get "/staffs/:id", :controller => "staffs", :action => "show"
+
+  # UPDATE
+  get "/staffs/:id/edit", :controller => "staffs", :action => "edit"
+  post "/update_staff/:id", :controller => "staffs", :action => "update"
+
+  # DELETE
+  get "/delete_staff/:id", :controller => "staffs", :action => "destroy"
+  #------------------------------
+
   # Routes for the Restaurant resource:
   # CREATE
   get "/restaurants/new", :controller => "restaurants", :action => "new"
