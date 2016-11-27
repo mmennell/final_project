@@ -60,7 +60,7 @@
           Home restaurant
         </label>
 
-        <input type="text" id="home_restaurant_id" name="home_restaurant_id" placeholder="Home restaurant" class="form-control" value="<%= @staff.home_restaurant_id %>">
+        <%= select_tag(:home_restaurant_id, options_from_collection_for_select(Restaurant.all, :id, :restaurant_name, @staff.home_restaurant_id), :class => "form-control") %>
       </div>
 
       <!-- Label and input for role_id -->
