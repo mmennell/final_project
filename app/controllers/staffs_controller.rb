@@ -16,6 +16,7 @@ class StaffsController < ApplicationController
   end
 
   def show
+    @job = Job.new
     @staff = Staff.find(params[:id])
 
     render("staffs/show.html.erb")

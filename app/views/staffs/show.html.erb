@@ -74,6 +74,64 @@
           </div>
         </li>
       <% end %>
+
+      <li class="list-group-item">
+        <form action="/create_job" method="post">
+      <!-- Hidden input for authenticity token to protect from forgery -->
+      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+      <!-- Label and input for start_time -->
+      <div class="form-group">
+        <label for="start_time" class="control-label">
+          Start time
+        </label>
+
+        <input type="text" id="start_time" name="start_time" placeholder="Start time" class="form-control" value="">
+      </div>
+
+      <!-- Label and input for end_time -->
+      <div class="form-group">
+        <label for="end_time" class="control-label">
+          End time
+        </label>
+
+        <input type="text" id="end_time" name="end_time" placeholder="End time" class="form-control" value="">
+      </div>
+
+      <!-- Label and input for role_id -->
+      <div class="form-group">
+        <label for="role_id" class="control-label">
+          Role
+        </label>
+
+        <%= select_tag(:role_id, options_from_collection_for_select(Role.all, :id, :role_name), :class => "form-control") %>
+      </div>
+
+      <!-- Label and input for hourly_rate -->
+      <div class="form-group">
+        <label for="hourly_rate" class="control-label">
+          Hourly rate
+        </label>
+
+        <input type="text" id="hourly_rate" name="hourly_rate" placeholder="Hourly rate" class="form-control" value="">
+      </div>
+
+      <!-- Label and input for staff_id -->
+      <input type="hidden" name="staff_id" value="<%= @staff.id %>">
+
+      <!-- Label and input for approved -->
+      <div class="checkbox">
+        <label for="approved">
+          <input type="checkbox" id="approved" name="approved" value="1" <%= "checked" if @job.approved %>>
+          Approved
+        </label>
+      </div>
+
+      <button class="btn btn-block btn-success">
+        Create Job
+      </button>
+    </form>
+      </li>
     </ul>
   </div>
 </div>

@@ -80,6 +80,82 @@
           </div>
         </li>
       <% end %>
+
+      <li class="list-group-item">
+        <form action="/create_staff" method="post">
+      <!-- Hidden input for authenticity token to protect from forgery -->
+      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+      <!-- Label and input for first_name -->
+      <div class="form-group">
+        <label for="first_name" class="control-label">
+          First name
+        </label>
+
+        <input type="text" id="first_name" name="first_name" placeholder="First name" class="form-control" value="">
+      </div>
+
+      <!-- Label and input for last_name -->
+      <div class="form-group">
+        <label for="last_name" class="control-label">
+          Last name
+        </label>
+
+        <input type="text" id="last_name" name="last_name" placeholder="Last name" class="form-control" value="">
+      </div>
+
+      <!-- Label and input for contact_telephone -->
+      <div class="form-group">
+        <label for="contact_telephone" class="control-label">
+          Contact telephone
+        </label>
+
+        <input type="text" id="contact_telephone" name="contact_telephone" placeholder="Contact telephone" class="form-control" value="">
+      </div>
+
+      <!-- Label and input for avatar_url -->
+      <div class="form-group">
+        <label for="avatar_url" class="control-label">
+          Avatar url
+        </label>
+
+        <input type="text" id="avatar_url" name="avatar_url" placeholder="Avatar url" class="form-control" value="">
+      </div>
+
+      <!-- Label and input for home_restaurant_id -->
+      <div class="form-group">
+        <label for="home_restaurant_id" class="control-label">
+          Home restaurant
+        </label>
+
+        <%= select_tag(:home_restaurant_id, options_from_collection_for_select(Restaurant.all, :id, :restaurant_name), :class => "form-control") %>
+      </div>
+
+      <!-- Label and input for role_id -->
+      <div class="form-group">
+        <label for="role_id" class="control-label">
+          Role
+        </label>
+
+        <input type="text" id="role_id" name="role_id" placeholder="Role" class="form-control" value="">
+      </div>
+
+      <!-- Label and input for user_id -->
+      <input type="hidden" name="user_id" value="<%= current_user.id %>">
+
+      <!-- Label and input for verified -->
+      <div class="checkbox">
+        <label for="verified">
+          <input type="checkbox" id="verified" name="verified" value="1" <%= "checked" if @staff.verified %>>
+          Verified
+        </label>
+      </div>
+
+      <button class="btn btn-block btn-success">
+        Create Staff
+      </button>
+    </form>
+      </li>
     </ul>
   </div>
 </div>
@@ -111,6 +187,38 @@
           </div>
         </li>
       <% end %>
+
+      <li class="list-group-item">
+        <form action="/create_role" method="post">
+      <!-- Hidden input for authenticity token to protect from forgery -->
+      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+      <!-- Label and input for role_name -->
+      <div class="form-group">
+        <label for="role_name" class="control-label">
+          Role name
+        </label>
+
+        <input type="text" id="role_name" name="role_name" placeholder="Role name" class="form-control" value="">
+      </div>
+
+      <!-- Label and input for description -->
+      <div class="form-group">
+        <label for="description" class="control-label">
+          Description
+        </label>
+
+        <input type="text" id="description" name="description" placeholder="Description" class="form-control" value="">
+      </div>
+
+      <!-- Label and input for restaurant_id -->
+      <input type="hidden" name="restaurant_id" value="<%= @restaurant.id %>">
+
+      <button class="btn btn-block btn-success">
+        Create Role
+      </button>
+    </form>
+      </li>
     </ul>
   </div>
 </div>
