@@ -5,4 +5,6 @@ class Role < ApplicationRecord
 
   # Validations
 
+  validates :role_name, :uniqueness => { :scope => [:restaurant_id] }
+
 end
