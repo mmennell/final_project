@@ -4,6 +4,9 @@ class Role < ApplicationRecord
   has_many   :jobs,
              :dependent => :nullify
 
+  has_many   :staffs,
+           :dependent => :nullify
+
   belongs_to :restaurant,
              :counter_cache => true
 

@@ -9,9 +9,12 @@
 <% end %>
 
 <div class="page-header">
-  <h3>Add Job</h3>
+  <h3>Add a New Shift</h3>
 </div>
 
+<div class="alert alert-info">
+When new shifts are added, they will appear under "Unassigned Shifts" until a staff member is selected.
+</div>
 <div class="row">
   <div class="col-md-12">
     <form action="/create_job" method="post">
@@ -19,21 +22,20 @@
       <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
 
       <!-- Label and input for start_time -->
-      <div class="form-group">
+      <div class="form-group" id='datetimepicker1'>
         <label for="start_time" class="control-label">
-          Start time
+          Shift starts at:
         </label>
-
-        <input type="text" id="start_time" name="start_time" placeholder="Start time" class="form-control" value="<%= @job.start_time %>">
+        <input type='text' class="form-control" name="start_time" placeholder="For example, Monday Dec 12 5pm" id="start_time">
       </div>
 
       <!-- Label and input for end_time -->
       <div class="form-group">
         <label for="end_time" class="control-label">
-          End time
+          Shift ends at:
         </label>
 
-        <input type="text" id="end_time" name="end_time" placeholder="End time" class="form-control" value="<%= @job.end_time %>">
+        <input type="text" id="end_time" name="end_time" placeholder="For example, Monday Dec 12 11pm" class="form-control" value="<%= @job.end_time %>">
       </div>
 
       <!-- Label and input for role_id -->
@@ -42,34 +44,33 @@
           Role
         </label>
 
-        <%= select_tag(:role_id, options_from_collection_for_select(Role.all, :id, :role_name, @job.role_id), :class => "form-control") %>
+        <%= select_tag(:role_id, options_from_collection_for_select(Role.where(restaurant_id: @restaurant_id), :id, :role_name, @job.role_id), :class => "form-control") %>
       </div>
 
       <!-- Label and input for hourly_rate -->
       <div class="form-group">
         <label for="hourly_rate" class="control-label">
-          Hourly rate
+          Hourly pay:
         </label>
 
-        <input type="text" id="hourly_rate" name="hourly_rate" placeholder="Hourly rate" class="form-control" value="<%= @job.hourly_rate %>">
+        <input type="text" id="hourly_rate" name="hourly_rate" placeholder="For example, 15.00" class="form-control" value="<%= @job.hourly_rate %>">
       </div>
 
-      <!-- Label and input for staff_id -->
       <div class="form-group">
-        <label for="staff_id" class="control-label">
-          Staff
+        <label for="times" class="control-label">
+          Number of staff needed:
         </label>
-
-        <%= select_tag(:staff_id, options_from_collection_for_select(Staff.all, :id, :first_name, @job.staff_id), :class => "form-control") %>
+        <input type="number" id = "times" name="times" min="1" max="100" placeholder="Between 1 and 100" class="form-control">
       </div>
 
-      <!-- Label and input for approved -->
-      <div class="checkbox">
-        <label for="approved">
-          <input type="checkbox" id="approved" name="approved" value="1" <%= "checked" if @job.approved %>>
-          Approved
+      <div class="form-group">
+        <label for="weeks" class="control-label">
+          For how many weeks?
         </label>
+        <input type="number" id = "weeks" name="weeks" min="1" max="52" placeholder="Between 1 and 52" class="form-control">
       </div>
+
+      <input name="staff_id" type="hidden" value = "">
 
       <button class="btn btn-success">
         Create Job

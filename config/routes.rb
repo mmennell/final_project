@@ -1,10 +1,11 @@
 Rails.application.routes.draw do
-  devise_for :admin_users, ActiveAdmin::Devise.config
-  ActiveAdmin.routes(self)
+
+  # devise_for :admin_users, ActiveAdmin::Devise.config
+  # ActiveAdmin.routes(self)
   root :to => "restaurants#index"
   # Routes for the Job resource:
   # CREATE
-  get "/jobs/new", :controller => "jobs", :action => "new"
+  get "/new_shift/:restaurant_id", :controller => "jobs", :action => "new"
   post "/create_job", :controller => "jobs", :action => "create"
 
   # READ
@@ -21,7 +22,7 @@ Rails.application.routes.draw do
 
   # Routes for the Role resource:
   # CREATE
-  get "/roles/new", :controller => "roles", :action => "new"
+  get "/new_role/:restaurant_id", :controller => "roles", :action => "new"
   post "/create_role", :controller => "roles", :action => "create"
 
   # READ
@@ -69,11 +70,19 @@ Rails.application.routes.draw do
   # DELETE
   get "/delete_restaurant/:id", :controller => "restaurants", :action => "destroy"
   #------------------------------
+  get "/users", :controller => "users", :action => "index"
 
-  devise_for :users
+  devise_scope :user do
+  get 'sign_in', to: 'devise/sessions#new'
+  get 'sign_out', to: 'devise/sessions#destroy'
+  get 'sign_up', to: 'devise/registrations#new'
+
+  end
+
+  devise_for :users, controllers: { registrations: "registrations" }
   # Routes for the User resource:
   # READ
-  get "/users", :controller => "users", :action => "index"
+  root "restaurants#index"
   get "/users/:id", :controller => "users", :action => "show"
 
 

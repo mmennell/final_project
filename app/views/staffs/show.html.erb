@@ -1,9 +1,15 @@
 <div class="page-header">
-  <h3>Staff #<%= @staff.id %></h3>
+  <h2><%= @staff.first_name %> <%= @staff.last_name %></h2>
 </div>
 
 <div class="row">
-  <div class="col-md-12 mb-2">
+  <div class="col-md-4 mb-2">
+    <img src="<%= @staff.avatar_url %>" class="img-responsive">
+  </div>
+  <div class="col-md-6 mb-2">
+        <h3 style="bold">About <%= @staff.first_name %>:</h3>
+
+
     <dl class="dl-horizontal">
       <dt>First name</dt>
       <dd><%= @staff.first_name %></dd>
@@ -14,136 +20,134 @@
       <dt>Contact telephone</dt>
       <dd><%= @staff.contact_telephone %></dd>
 
-      <dt>Avatar url</dt>
-      <dd><%= @staff.avatar_url %></dd>
+      <dt>Role</dt>
+      <% if @staff.role.present? %>
+      <dd><a href ="/roles/<%= @staff.role.id %>"><%= @staff.role.role_name %></a></dd>
+      <% end %>
 
-      <dt>Home restaurant</dt>
+      <dt>Restaurant</dt>
       <dd>
         <% if @staff.home_restaurant.present? %>
           <a href="/restaurants/<%= @staff.home_restaurant_id %>">
-            <%= @staff.home_restaurant.restaurant_name %>
+            <img src="<%= @staff.home_restaurant.logo_url %>" class="img-responsive">
           </a>
         <% end %>
       </dd>
-
-      <dt>Role</dt>
-      <dd><%= @staff.role_id %></dd>
-
-      <dt>User</dt>
-      <dd>
-        <% if @staff.user.present? %>
-          <a href="/users/<%= @staff.user_id %>">
-            <%= @staff.user.email %>
-          </a>
-        <% end %>
-      </dd>
-
-      <dt>Verified</dt>
-      <dd><%= @staff.verified %></dd>
 
     </dl>
-
-    <div class="btn-group btn-group-justified">
-      <a href="/staffs" class="btn btn-primary">
-        Back
-      </a>
-      <% if current_user == @staff.user %>
-        <a href="/staffs/<%= @staff.id %>/edit" class="btn btn-warning">
-          Edit
-        </a>
-        <a href="/delete_staff/<%= @staff.id %>" class="btn btn-danger" rel="nofollow">
-          Delete
-        </a>
-      <% end %>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <h3><%= @staff.first_name %>'s schedule:</h3><br />
+      <% @jobs.each do |job| %>
+      <div class="col-xs-2">
+          <div class="panel panel-primary">
+            <div class="panel-body" style="text-align: center;">
+              <h5><%= job.restaurant.restaurant_name %></h5>
+              <h4><%= job.start_time.strftime("%a, %b %d") %></h4>
+              <h4><a href="/jobs/<%= job.id %>/edit"><%= job.start_time.strftime("%l:%M %p") %></a></h4>
+        </div>
+      </div>
     </div>
+    <% end %>
+    <%= paginate @jobs, theme: 'twitter-bootstrap-4', :param_name => 'schedule' %>
   </div>
 </div>
 
-<!-- A Staff has many jobs -->
+<% if @staff.user_id == current_user.id %>
+<% if @staff.verified != TRUE %>
+<div class="alert alert-warning">
+  <strong>User awaiting verification from <%= @staff.home_restaurant.restaurant_name %></strong>
+</div>
+<% else %>
 
 <div class="row">
   <div class="col-md-12">
-    <ul class="list-group">
-      <li class="list-group-item list-group-item-info">
-        Jobs
-      </li>
+    <h3>Pending approval:</h3><br />
+      <% @jobs_v.each do |job| %>
+      <div class="col-xs-2">
+          <div class="panel panel-primary">
+            <div class="panel-body" style="text-align: center;">
+              <h5><%= job.restaurant.restaurant_name %></h5>
+              <h4><%= job.start_time.strftime("%a, %b %d") %></h4>
+              <h4><a href="/jobs/<%= job.id %>/edit"><%= job.start_time.strftime("%l:%M %p") %></a></h4>
+        </div>
+      </div>
+    </div>
+    <% end %>
+    <%= paginate @jobs_v, theme: 'twitter-bootstrap-4', :param_name => 'pending' %>
+  </div>
+</div>
 
-      <% @staff.jobs.each do |job| %>
-        <li class="list-group-item">
-          <a href="/jobs/<%= job.id %>">
-            <%= job.start_time %>
-          </a>
-          <div class="btn-group btn-group-xs pull-right">
-            <a href="/jobs/<%= job.id %>" class="btn btn-primary">
-              <i class="fa fa-search-plus"></i>
+
+<div class="row">
+<div class="col-md-12">
+<h3><%= @staff.role.role_name %> jobs available:</h3><br />
+<% @jobs_a.each do |job| %>
+<div class="col-xs-2">
+    <div class="panel panel-primary">
+      <div class="panel-body" style="text-align: center;">
+        <h4><%= job.start_time.strftime("%a, %b %d") %></h4>
+        <h4><a href="/jobs/<%= job.id %>/edit"><%= job.start_time.strftime("%l:%M %p") %></a></h4>
+  </div>
+</div>
+</div>
+<% end %>
+<%= paginate @jobs_a, theme: 'twitter-bootstrap-4', :param_name => 'jobs' %>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-12">
+<h3>All <%= @staff.home_restaurant.restaurant_name %> jobs available:</h3><br />
+<% @jobs_b.each do |job| %>
+<div class="col-xs-2">
+    <div class="panel panel-primary">
+      <div class="panel-body" style="text-align: center;">
+        <h4><a href="/roles/<%= job.role.id %>"><%= job.role.role_name %></a></h4><h4><%= job.start_time.strftime("%a, %b %d") %></h4>
+        <h4><a href="/jobs/<%= job.id %>/edit"><%= job.start_time.strftime("%l:%M %p") %></a></h4>
+  </div>
+</div>
+</div>
+<% end %>
+<%= paginate @jobs_b, theme: 'twitter-bootstrap-4', :param_name => 'jobs_other' %>
+</div>
+</div>
+
+<% end %>
+<% end %>
+
+<div class="row">
+  <div class="col-md-12">
+    <h3><%= @staff.home_restaurant.restaurant_name %> staff:</h3><br />
+      <% @staffs.each do |staff| %>
+      <div class="col-xs-2">
+          <div class="panel panel-primary">
+            <div class="panel-body" style="text-align: center;">
+              <h4><%= staff.first_name %></h4>
+            <a href="/staffs/<%= staff.id %>">
+            <img src="<%= staff.avatar_url %>" height="100" style="margin: auto;">
             </a>
-            <a href="/jobs/<%= job.id %>/edit" class="btn btn-warning">
-              <i class="fa fa-edit"></i>
-            </a>
-            <a href="/delete_job/<%= job.id %>" class="btn btn-danger" rel="nofollow">
-              <i class="fa fa-trash-o"></i>
-            </a>
-          </div>
-        </li>
+          <% if staff.role.present? %>
+          <h5><a href ="/roles/<%= staff.role.id %>"><%= staff.role.role_name %></a></h5>
+          <% else %>
+          <h5> No role present </h5>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <% end %>
+
+    <div class="btn-group btn-group-justified">
+      <a href="/staffs" class="btn btn-primary">
+       <i class="glyphicon glyphicon-arrow-left"></i> Back
+      </a>
+      <% if current_user == @staff.user %>
+        <a href="/staffs/<%= @staff.id %>/edit" class="btn btn-primary">
+        <i class="glyphicon glyphicon-pencil"></i> Edit
+        </a>
       <% end %>
-
-      <li class="list-group-item">
-        <form action="/create_job" method="post">
-      <!-- Hidden input for authenticity token to protect from forgery -->
-      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
-
-      <!-- Label and input for start_time -->
-      <div class="form-group">
-        <label for="start_time" class="control-label">
-          Start time
-        </label>
-
-        <input type="text" id="start_time" name="start_time" placeholder="Start time" class="form-control" value="">
-      </div>
-
-      <!-- Label and input for end_time -->
-      <div class="form-group">
-        <label for="end_time" class="control-label">
-          End time
-        </label>
-
-        <input type="text" id="end_time" name="end_time" placeholder="End time" class="form-control" value="">
-      </div>
-
-      <!-- Label and input for role_id -->
-      <div class="form-group">
-        <label for="role_id" class="control-label">
-          Role
-        </label>
-
-        <%= select_tag(:role_id, options_from_collection_for_select(Role.all, :id, :role_name), :class => "form-control") %>
-      </div>
-
-      <!-- Label and input for hourly_rate -->
-      <div class="form-group">
-        <label for="hourly_rate" class="control-label">
-          Hourly rate
-        </label>
-
-        <input type="text" id="hourly_rate" name="hourly_rate" placeholder="Hourly rate" class="form-control" value="">
-      </div>
-
-      <!-- Label and input for staff_id -->
-      <input type="hidden" name="staff_id" value="<%= @staff.id %>">
-
-      <!-- Label and input for approved -->
-      <div class="checkbox">
-        <label for="approved">
-          <input type="checkbox" id="approved" name="approved" value="1" <%= "checked" if @job.approved %>>
-          Approved
-        </label>
-      </div>
-
-      <button class="btn btn-block btn-success">
-        Create Job
-      </button>
-    </form>
-      </li>
-    </ul>
+    </div>
   </div>
 </div>

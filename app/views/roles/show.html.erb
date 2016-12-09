@@ -1,29 +1,25 @@
 <div class="page-header">
-  <h3>Role #<%= @role.id %></h3>
+  <h2><%= @role.role_name %></h2>
+    <h4><i><%= @role.description %></i></h4>
 </div>
 
 <div class="row">
   <div class="col-md-12 mb-2">
-    <dl class="dl-horizontal">
-      <dt>Role name</dt>
-      <dd><%= @role.role_name %></dd>
-
-      <dt>Description</dt>
-      <dd><%= @role.description %></dd>
-
-      <dt>Restaurant</dt>
-      <dd>
-        <% if @role.restaurant.present? %>
-          <a href="/restaurants/<%= @role.restaurant_id %>">
-            <%= @role.restaurant.restaurant_name %>
+    <% @role.staffs.each do |staff| %>
+    <div class="col-xs-2">
+        <div class="panel panel-primary">
+          <div class="panel-body" style="text-align: center;">
+            <h4><%= staff.first_name %></h4>
+          <a href="/staffs/<%= staff.id %>">
+          <img src="<%= staff.avatar_url %>" height="100" style="margin: auto;">
           </a>
-        <% end %>
-      </dd>
-
-    </dl>
-
+        <h5><%= staff.contact_telephone %></h5>
+      </div>
+    </div>
+  </div>
+  <% end %>
     <div class="btn-group btn-group-justified">
-      <a href="/roles" class="btn btn-primary">
+      <a href="/restaurants/<%= @role.restaurant_id %>" class="btn btn-primary">
         Back
       </a>
       <a href="/roles/<%= @role.id %>/edit" class="btn btn-warning">
@@ -33,94 +29,5 @@
         Delete
       </a>
     </div>
-  </div>
-</div>
-
-<!-- A Role has many jobs -->
-
-<div class="row">
-  <div class="col-md-12">
-    <ul class="list-group">
-      <li class="list-group-item list-group-item-info">
-        Jobs
-      </li>
-
-      <% @role.jobs.each do |job| %>
-        <li class="list-group-item">
-          <a href="/jobs/<%= job.id %>">
-            <%= job.start_time %>
-          </a>
-          <div class="btn-group btn-group-xs pull-right">
-            <a href="/jobs/<%= job.id %>" class="btn btn-primary">
-              <i class="fa fa-search-plus"></i>
-            </a>
-            <a href="/jobs/<%= job.id %>/edit" class="btn btn-warning">
-              <i class="fa fa-edit"></i>
-            </a>
-            <a href="/delete_job/<%= job.id %>" class="btn btn-danger" rel="nofollow">
-              <i class="fa fa-trash-o"></i>
-            </a>
-          </div>
-        </li>
-      <% end %>
-
-      <li class="list-group-item">
-        <form action="/create_job" method="post">
-      <!-- Hidden input for authenticity token to protect from forgery -->
-      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
-
-      <!-- Label and input for start_time -->
-      <div class="form-group">
-        <label for="start_time" class="control-label">
-          Start time
-        </label>
-
-        <input type="text" id="start_time" name="start_time" placeholder="Start time" class="form-control" value="">
-      </div>
-
-      <!-- Label and input for end_time -->
-      <div class="form-group">
-        <label for="end_time" class="control-label">
-          End time
-        </label>
-
-        <input type="text" id="end_time" name="end_time" placeholder="End time" class="form-control" value="">
-      </div>
-
-      <!-- Label and input for role_id -->
-      <input type="hidden" name="role_id" value="<%= @role.id %>">
-
-      <!-- Label and input for hourly_rate -->
-      <div class="form-group">
-        <label for="hourly_rate" class="control-label">
-          Hourly rate
-        </label>
-
-        <input type="text" id="hourly_rate" name="hourly_rate" placeholder="Hourly rate" class="form-control" value="">
-      </div>
-
-      <!-- Label and input for staff_id -->
-      <div class="form-group">
-        <label for="staff_id" class="control-label">
-          Staff
-        </label>
-
-        <%= select_tag(:staff_id, options_from_collection_for_select(Staff.all, :id, :first_name), :class => "form-control") %>
-      </div>
-
-      <!-- Label and input for approved -->
-      <div class="checkbox">
-        <label for="approved">
-          <input type="checkbox" id="approved" name="approved" value="1" <%= "checked" if @job.approved %>>
-          Approved
-        </label>
-      </div>
-
-      <button class="btn btn-block btn-success">
-        Create Job
-      </button>
-    </form>
-      </li>
-    </ul>
   </div>
 </div>

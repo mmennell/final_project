@@ -1,3 +1,4 @@
+
 <!-- Validation failure messages -->
 <% if @restaurant.errors.any? %>
   <% @restaurant.errors.full_messages.each do |message| %>
@@ -90,8 +91,9 @@
         <input type="text" id="contact_telephone" name="contact_telephone" placeholder="Contact telephone" class="form-control" value="<%= @restaurant.contact_telephone %>">
       </div>
 
-      
-      
+      <!-- Label and input for user_id -->
+      <input type="hidden" name="user_id" value="<%= current_user.id %>">
+
 
       <!-- Label and input for verified -->
       <div class="checkbox">

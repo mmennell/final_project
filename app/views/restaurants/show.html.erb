@@ -1,261 +1,171 @@
+<% if current_user == @restaurant.user %>
+<% if @staff_unverified.count > 0%>
+<div class="alert alert-warning">
+<strong>Users are awaiting verification</strong>
+</div>
+<% end %>
+<% elsif current_user.staff.verified != TRUE %>
+<div class="alert alert-warning">
+<strong>You are awaiting verification from <%= current_user.staff.home_restaurant.restaurant_name %></strong>
+</div>
+<% end %>
 <div class="page-header">
-  <h3>Restaurant #<%= @restaurant.id %></h3>
+  <h1><%= @restaurant.restaurant_name %></h1>
 </div>
 
 <div class="row">
-  <div class="col-md-12 mb-2">
-    <dl class="dl-horizontal">
-      <dt>Restaurant name</dt>
-      <dd><%= @restaurant.restaurant_name %></dd>
 
-      <dt>Address</dt>
-      <dd><%= @restaurant.address %></dd>
+  <div class="col-md-6 mb-2">
 
-      <dt>Latitude</dt>
-      <dd><%= @restaurant.latitude %></dd>
-
-      <dt>Longitude</dt>
-      <dd><%= @restaurant.longitude %></dd>
-
-      <dt>Description</dt>
-      <dd><%= @restaurant.description %></dd>
-
-      <dt>Logo url</dt>
-      <dd><%= @restaurant.logo_url %></dd>
-
-      <dt>Contact name</dt>
-      <dd><%= @restaurant.contact_name %></dd>
-
-      <dt>Contact telephone</dt>
-      <dd><%= @restaurant.contact_telephone %></dd>
-
-      <dt>User</dt>
-      <dd>
-        <% if @restaurant.user.present? %>
-          <a href="/users/<%= @restaurant.user_id %>">
-            <%= @restaurant.user.email %>
-          </a>
-        <% end %>
-      </dd>
-
-      <dt>Verified</dt>
-      <dd><%= @restaurant.verified %></dd>
-
-    </dl>
-
-    <div class="btn-group btn-group-justified">
-      <a href="/restaurants" class="btn btn-primary">
-        Back
-      </a>
-      <% if current_user == @restaurant.user %>
-        <a href="/restaurants/<%= @restaurant.id %>/edit" class="btn btn-warning">
-          Edit
-        </a>
-        <a href="/delete_restaurant/<%= @restaurant.id %>" class="btn btn-danger" rel="nofollow">
-          Delete
-        </a>
+    <img src="<%= @restaurant.logo_url %>" class="img-responsive">
+    <br />
+    <h4><i><%= @restaurant.description %></i></h4>
+    <h4><b>Contact Name:</b> <%= @restaurant.contact_name %></h4>
+    <h4><b>Telephone:</b> <%= @restaurant.contact_telephone %></h4>
+    <h4><b>Roles available:</b>
+  <% if current_user == @restaurant.user %>
+      <a href="/new_role/<%= @restaurant.id %>" class="btn btn btn-success" style="float: right;">Add New Role</a></h4>
       <% end %>
+
+          <% @restaurant.roles.each do |roles| %>
+              <h4><a href = "/roles/<%= roles.id %>"><%= roles.role_name %></a></h4>
+          <% end %>
+    <br />
+
+
+  </div>
+  <div class="col-md-6 mb-2">
+    <iframe
+      width="550"
+      height="400"
+      frameborder="0" style="border:0"
+      src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDEmyf80CmNUYbtCAaMk4xiU14JeTS4_NQ&q=<%= @restaurant.restaurant_name %>+<%= @restaurant.address %>" allowfullscreen>
+    </iframe>
+  </div>
+</div>
+
+<h3>Upcoming Shifts
+  <% if current_user == @restaurant.user %>
+<a href="/new_shift/<%= @restaurant.id %>" class="btn btn btn-success" style="float: right;">Add New Shift</a>
+<% end %>
+</h3><br />
+<div class="col-md-12 mb-2">
+<% @shifts_b.each do |job| %>
+<div class="col-xs-2">
+    <div class="panel panel-primary">
+      <div class="panel-body" style="text-align: center;">
+        <h4><%= job.staff.first_name %></h4>
+        <a href ="/staffs/<%= job.staff.id %>"><img src="<%= job.staff.avatar_url %>" height="100" style="margin: auto;"></a>
+        <h4><%= job.start_time.strftime("%a, %b %d") %></h4>
+        <h4><a href="/jobs/<%= job.id %>/edit"><%= job.start_time.strftime("%l:%M %p") %></a></h4>
+  </div>
+</div>
+</div>
+<% end %>
+</div>
+<%= paginate @shifts_b, theme: 'twitter-bootstrap-4', :param_name => 'upcoming' %>
+
+
+  <% if current_user == @restaurant.user %>
+<% if @shifts_c.count > 0 %>
+<h3>Shifts awaiting approval</h3><br />
+<div class="col-md-12 mb-2">
+<% @shifts_c.each do |job| %>
+<div class="col-xs-2">
+    <div class="panel panel-primary">
+      <div class="panel-body" style="text-align: center;">
+        <h4><%= job.staff.first_name %></h4>
+        <a href ="/staffs/<%= job.staff.id %>"><img src="<%= job.staff.avatar_url %>" height="100" style="margin: auto;"></a>
+        <h4><%= job.start_time.strftime("%a, %b %d") %></h4>
+        <h4><a href="/jobs/<%= job.id %>/edit"><%= job.start_time.strftime("%l:%M %p") %></a></h4>
+  </div>
+</div>
+</div>
+<% end %>
+</div>
+<%= paginate @shifts_c, theme: 'twitter-bootstrap-4', :param_name => 'pending' %>
+<% end %>
+
+<h3>Unassigned Shifts
+<a href="/new_shift/<%= @restaurant.id %>" class="btn btn btn-success" style="float: right;">Add New Shift</a>
+<% else %>
+<h3>Available Shifts
+<% end %>
+</h3><br />
+<div class="col-md-12 mb-2">
+<% @shifts_a.each do |job| %>
+<div class="col-xs-2">
+    <div class="panel panel-primary">
+      <div class="panel-body" style="text-align: center;">
+        <h4><a href="/roles/<%= job.role.id %>"><%= job.role.role_name %></a></h4><h4><%= job.start_time.strftime("%a, %b %d") %></h4>
+        <h4><a href="/jobs/<%= job.id %>/edit"><%= job.start_time.strftime("%l:%M %p") %></a></h4>
+
+  </div>
+</div>
+</div>
+<% end %>
+</div>
+<%= paginate @shifts_a, theme: 'twitter-bootstrap-4', :param_name => 'unassigned' %>
+
+
+
+
+
+
+<h3><%= @restaurant.restaurant_name %> Staff</h3> <br />
+<div class="row">
+  <div class="col-md-12">
+      <% @staff_verified.each do |staff| %>
+      <div class="col-xs-2">
+          <div class="panel panel-primary">
+            <div class="panel-body" style="text-align: center;">
+              <h4><%= staff.first_name %></h4>
+            <a href="/staffs/<%= staff.id %>">
+            <img src="<%= staff.avatar_url %>" height="100" style="margin: auto;">
+            </a>
+          <% if staff.role.present? %>
+          <h5><%= staff.role.role_name %></h5>
+          <% else %>
+          <h5>Unassigned Role</h5>
+          <% end %>
+        </div>
+      </div>
     </div>
+    <% end %>
   </div>
 </div>
 
-<!-- A Restaurant has many staffs -->
-
+  <% if current_user == @restaurant.user %>
+<% if @staff_unverified.count > 0%>
+<h3>Unverified Staff</h3> <br />
 <div class="row">
   <div class="col-md-12">
-    <ul class="list-group">
-      <li class="list-group-item list-group-item-info">
-        Staffs
-      </li>
-
-      <% @restaurant.staffs.each do |staff| %>
-        <li class="list-group-item">
-          <a href="/staffs/<%= staff.id %>">
-            <%= staff.first_name %>
-          </a>
-          <div class="btn-group btn-group-xs pull-right">
-            <a href="/staffs/<%= staff.id %>" class="btn btn-primary">
-              <i class="fa fa-search-plus"></i>
-            </a>
-            <a href="/staffs/<%= staff.id %>/edit" class="btn btn-warning">
-              <i class="fa fa-edit"></i>
-            </a>
-            <a href="/delete_staff/<%= staff.id %>" class="btn btn-danger" rel="nofollow">
-              <i class="fa fa-trash-o"></i>
-            </a>
-          </div>
-        </li>
-      <% end %>
-
-      <li class="list-group-item">
-        <form action="/create_staff" method="post">
-      <!-- Hidden input for authenticity token to protect from forgery -->
-      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
-
-      <!-- Label and input for first_name -->
-      <div class="form-group">
-        <label for="first_name" class="control-label">
-          First name
-        </label>
-
-        <input type="text" id="first_name" name="first_name" placeholder="First name" class="form-control" value="">
+      <% @staff_unverified.each do |staff| %>
+      <div class="col-xs-2">
+          <div class="panel panel-primary">
+            <div class="panel-body" style="text-align: center;">
+              <h4><%= staff.first_name %></h4>
+            <a href="/staffs/<%= staff.id %>/edit">
+            <img src="<%= staff.avatar_url %>" height="100" style="margin: auto;">
+            <h5>Verify</h5>            </a>
+        </div>
       </div>
-
-      <!-- Label and input for last_name -->
-      <div class="form-group">
-        <label for="last_name" class="control-label">
-          Last name
-        </label>
-
-        <input type="text" id="last_name" name="last_name" placeholder="Last name" class="form-control" value="">
-      </div>
-
-      <!-- Label and input for contact_telephone -->
-      <div class="form-group">
-        <label for="contact_telephone" class="control-label">
-          Contact telephone
-        </label>
-
-        <input type="text" id="contact_telephone" name="contact_telephone" placeholder="Contact telephone" class="form-control" value="">
-      </div>
-
-      <!-- Label and input for avatar_url -->
-      <div class="form-group">
-        <label for="avatar_url" class="control-label">
-          Avatar url
-        </label>
-
-        <input type="text" id="avatar_url" name="avatar_url" placeholder="Avatar url" class="form-control" value="">
-      </div>
-
-      <!-- Label and input for home_restaurant_id -->
-      <div class="form-group">
-        <label for="home_restaurant_id" class="control-label">
-          Home restaurant
-        </label>
-
-        <%= select_tag(:home_restaurant_id, options_from_collection_for_select(Restaurant.all, :id, :restaurant_name), :class => "form-control") %>
-      </div>
-
-      <!-- Label and input for role_id -->
-      <div class="form-group">
-        <label for="role_id" class="control-label">
-          Role
-        </label>
-
-        <input type="text" id="role_id" name="role_id" placeholder="Role" class="form-control" value="">
-      </div>
-
-      <!-- Label and input for user_id -->
-      <input type="hidden" name="user_id" value="<%= current_user.id %>">
-
-      <!-- Label and input for verified -->
-      <div class="checkbox">
-        <label for="verified">
-          <input type="checkbox" id="verified" name="verified" value="1" <%= "checked" if @staff.verified %>>
-          Verified
-        </label>
-      </div>
-
-      <button class="btn btn-block btn-success">
-        Create Staff
-      </button>
-    </form>
-      </li>
-    </ul>
+    </div>
+    <% end %>
   </div>
 </div>
 
-<!-- A Restaurant has many roles -->
+<% end %>
+<% end %>
 
-<div class="row">
-  <div class="col-md-12">
-    <ul class="list-group">
-      <li class="list-group-item list-group-item-info">
-        Roles
-      </li>
-
-      <% @restaurant.roles.each do |role| %>
-        <li class="list-group-item">
-          <a href="/roles/<%= role.id %>">
-            <%= role.role_name %>
-          </a>
-          <div class="btn-group btn-group-xs pull-right">
-            <a href="/roles/<%= role.id %>" class="btn btn-primary">
-              <i class="fa fa-search-plus"></i>
-            </a>
-            <a href="/roles/<%= role.id %>/edit" class="btn btn-warning">
-              <i class="fa fa-edit"></i>
-            </a>
-            <a href="/delete_role/<%= role.id %>" class="btn btn-danger" rel="nofollow">
-              <i class="fa fa-trash-o"></i>
-            </a>
-          </div>
-        </li>
-      <% end %>
-
-      <li class="list-group-item">
-        <form action="/create_role" method="post">
-      <!-- Hidden input for authenticity token to protect from forgery -->
-      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
-
-      <!-- Label and input for role_name -->
-      <div class="form-group">
-        <label for="role_name" class="control-label">
-          Role name
-        </label>
-
-        <input type="text" id="role_name" name="role_name" placeholder="Role name" class="form-control" value="">
-      </div>
-
-      <!-- Label and input for description -->
-      <div class="form-group">
-        <label for="description" class="control-label">
-          Description
-        </label>
-
-        <input type="text" id="description" name="description" placeholder="Description" class="form-control" value="">
-      </div>
-
-      <!-- Label and input for restaurant_id -->
-      <input type="hidden" name="restaurant_id" value="<%= @restaurant.id %>">
-
-      <button class="btn btn-block btn-success">
-        Create Role
-      </button>
-    </form>
-      </li>
-    </ul>
-  </div>
-</div>
-
-<!-- A Restaurant has many shifts -->
-
-<div class="row">
-  <div class="col-md-12">
-    <ul class="list-group">
-      <li class="list-group-item list-group-item-info">
-        Shifts
-      </li>
-
-      <% @restaurant.shifts.each do |job| %>
-        <li class="list-group-item">
-          <a href="/jobs/<%= job.id %>">
-            <%= job.start_time %>
-          </a>
-          <div class="btn-group btn-group-xs pull-right">
-            <a href="/jobs/<%= job.id %>" class="btn btn-primary">
-              <i class="fa fa-search-plus"></i>
-            </a>
-            <a href="/jobs/<%= job.id %>/edit" class="btn btn-warning">
-              <i class="fa fa-edit"></i>
-            </a>
-            <a href="/delete_job/<%= job.id %>" class="btn btn-danger" rel="nofollow">
-              <i class="fa fa-trash-o"></i>
-            </a>
-          </div>
-        </li>
-      <% end %>
-    </ul>
-  </div>
+<div class="btn-group btn-group-justified">
+  <a href="/restaurants" class="btn btn-primary">
+    <i class="glyphicon glyphicon-arrow-left"></i> All Restaurants
+  </a>
+  <% if current_user == @restaurant.user %>
+    <a href="/restaurants/<%= @restaurant.id %>/edit" class="btn btn-primary">
+      <i class="glyphicon glyphicon-pencil"></i>
+      Edit
+    </a>
+  <% end %>
 </div>

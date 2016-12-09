@@ -9,7 +9,7 @@
 <% end %>
 
 <div class="page-header">
-  <h3>Add Staff</h3>
+  <h3>Complete your profile</h3>
 </div>
 
 <div class="row">
@@ -63,31 +63,13 @@
         <%= select_tag(:home_restaurant_id, options_from_collection_for_select(Restaurant.all, :id, :restaurant_name, @staff.home_restaurant_id), :class => "form-control") %>
       </div>
 
-      <!-- Label and input for role_id -->
-      <div class="form-group">
-        <label for="role_id" class="control-label">
-          Role
-        </label>
-
-        <input type="text" id="role_id" name="role_id" placeholder="Role" class="form-control" value="<%= @staff.role_id %>">
-      </div>
-
-      <!-- Label and input for user_id -->
+      <input type="hidden" name="role_id" value="">
       <input type="hidden" name="user_id" value="<%= current_user.id %>">
-
-      <!-- Label and input for verified -->
-      <div class="checkbox">
-        <label for="verified">
-          <input type="checkbox" id="verified" name="verified" value="1" <%= "checked" if @staff.verified %>>
-          Verified
-        </label>
-      </div>
+      <input type="hidden" name="verified" value="">
 
       <button class="btn btn-success">
-        Create Staff
+        Let's get started
       </button>
-      or
-      <a href="/staffs">Cancel</a>
     </form>
   </div>
 </div>

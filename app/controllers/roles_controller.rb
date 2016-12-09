@@ -1,7 +1,7 @@
 class RolesController < ApplicationController
   def index
     @q = Role.ransack(params[:q])
-    @roles = @q.result(:distinct => true).includes(:restaurant, :jobs).page(params[:page]).per(10)
+    @roles = @q.result(:distinct => true).includes(:restaurant, :jobs).page(params[:page]).per(20)
 
     render("roles/index.html.erb")
   end
@@ -15,6 +15,7 @@ class RolesController < ApplicationController
 
   def new
     @role = Role.new
+    @role.restaurant_id = params[:restaurant_id]
 
     render("roles/new.html.erb")
   end

@@ -37,19 +37,16 @@
       </div>
 
       <!-- Label and input for restaurant_id -->
-      <div class="form-group">
-        <label for="restaurant_id" class="control-label">
-          Restaurant
-        </label>
-
-        <%= select_tag(:restaurant_id, options_from_collection_for_select(Restaurant.all, :id, :restaurant_name, @role.restaurant_id), :class => "form-control") %>
-      </div>
+      <input type="hidden" id="restaurant_id" name="restaurant_id" value="<%= @role.restaurant_id %>">
 
       <button class="btn btn-success">
         Create Role
       </button>
-      or
-      <a href="/roles">Cancel</a>
     </form>
   </div>
+</div><br />
+<div class="btn-group btn-group-justified">
+  <a href="/restaurants/<%= @role.restaurant_id %>" class="btn btn-primary">
+    <i class="glyphicon glyphicon-arrow-left"></i> Back
+  </a>
 </div>

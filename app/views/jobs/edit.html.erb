@@ -8,74 +8,199 @@
   <% end %>
 <% end %>
 
+<!-- Restaurant user gets a different user experience to the staff -->
+
+<% if @job.restaurant.user_id != current_user.id %>
+
 <div class="page-header">
-  <h3>Edit Job #<%= @job.id %></h3>
+  <h1>Job Details</h1>
 </div>
 
 <div class="row">
-  <div class="col-md-12">
-    <form action="/update_job/<%= @job.id %>" method="post">
-      <!-- Hidden input for authenticity token to protect from forgery -->
-      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
 
-      <!-- Label and input for start_time -->
-      <div class="form-group">
-        <label for="start_time" class="control-label">
-          Start time
-        </label>
-
-        <input type="text" id="start_time" name="start_time" placeholder="Start time" class="form-control" value="<%= @job.start_time %>">
-      </div>
-
-      <!-- Label and input for end_time -->
-      <div class="form-group">
-        <label for="end_time" class="control-label">
-          End time
-        </label>
-
-        <input type="text" id="end_time" name="end_time" placeholder="End time" class="form-control" value="<%= @job.end_time %>">
-      </div>
-
-      <!-- Label and input for role_id -->
-      <div class="form-group">
-        <label for="role_id" class="control-label">
-          Role
-        </label>
-
-        <%= select_tag(:role_id, options_from_collection_for_select(Role.all, :id, :role_name, @job.role_id), :class => "form-control") %>
-      </div>
-
-      <!-- Label and input for hourly_rate -->
-      <div class="form-group">
-        <label for="hourly_rate" class="control-label">
-          Hourly rate
-        </label>
-
-        <input type="text" id="hourly_rate" name="hourly_rate" placeholder="Hourly rate" class="form-control" value="<%= @job.hourly_rate %>">
-      </div>
-
-      <!-- Label and input for staff_id -->
-      <div class="form-group">
-        <label for="staff_id" class="control-label">
-          Staff
-        </label>
-
-        <%= select_tag(:staff_id, options_from_collection_for_select(Staff.all, :id, :first_name, @job.staff_id), :class => "form-control") %>
-      </div>
-
-      <!-- Label and input for approved -->
-      <div class="checkbox">
-        <label for="approved">
-          <input type="checkbox" id="approved" name="approved" value="1" <%= "checked" if @job.approved %>>
-          Approved
-        </label>
-      </div>
-
-      <button class="btn btn-warning">
-        Update Job
-      </button>
-      or
-      <a href="/jobs/<%= @job.id %>">Cancel</a>
-    </form>
+  <div class="col-md-6 mb-2">
+    <iframe
+      width="550"
+      height="400"
+      frameborder="0" style="border:0"
+      src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDEmyf80CmNUYbtCAaMk4xiU14JeTS4_NQ&q=<%= @job.restaurant.restaurant_name %>+<%= @job.restaurant.address %>" allowfullscreen>
+    </iframe>
   </div>
+
+<div class="col-md-6 mb-2">
+
+  <h2><%= @job.restaurant.restaurant_name %></h2>
+  <h4><i><%= @job.restaurant.description %></i></h4>
+  <h4><a href="/roles/<%= @job.role.id %>"><%= @job.role.role_name %></a></h4><h4><%= @job.start_time.strftime("%A, %B %C") %></h4>
+  <h4><%= @job.start_time.strftime("%l:%M %p") %> - <%= @job.end_time.strftime("%l:%M %p") %></h4>
+  <h4>$<%= @job.hourly_rate.to_i %> per hour + tips</h4>
+  <br />
+
+<% if current_user.staff.verified != TRUE %>
+<div class="alert alert-warning">
+<center><strong>You are awaiting verification from <%= current_user.staff.home_restaurant.restaurant_name %></strong></center>
+</div>
+</div>
+</div><br />
+<% else %>
+
+  <% if @job.staff_id == nil  %>
+  <% if @job.restaurant.id == current_user.staff.home_restaurant_id  %>
+  <h4><strong>Great news! This job is available...</strong></h4>
+  <form action="/update_job/<%= @job.id %>" method="post">
+    <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+      <input type="hidden" id="start_time" name="start_time" value="<%= @job.start_time %>">
+      <input type="hidden" id="end_time" name="end_time" value="<%= @job.end_time %>">
+      <input type="hidden" id="role_id" name="role_id" value="<%= @job.role_id %>">
+      <input type="hidden" id="hourly_rate" name="hourly_rate" value="<%= @job.hourly_rate %>">
+      <input type="hidden" id="approved" name="approved" value="">
+      <input type="hidden" id="staff_id" name="staff_id" value="<%= current_user.staff.id %>">
+      <button class="btn btn-success">
+        Request Job!
+      </button>
+
+    </form>
+  <% else %>
+    <h4><strong>Sorry, you are not approved to work at <%= @job.restaurant.restaurant_name %>...</strong></h4>
+  <% end %>
+  <% elsif @job.staff_id== current_user.staff.id  %>
+  <h4><strong>You are currently assigned to this job...</strong></h4>
+  <form action="/update_job/<%= @job.id %>" method="post">
+    <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+      <input type="hidden" id="start_time" name="start_time" value="<%= @job.start_time %>">
+      <input type="hidden" id="end_time" name="end_time" value="<%= @job.end_time %>">
+      <input type="hidden" id="role_id" name="role_id" value="<%= @job.role_id %>">
+      <input type="hidden" id="hourly_rate" name="hourly_rate" value="<%= @job.hourly_rate %>">
+      <input type="hidden" id="approved" name="approved" value="">
+      <input type="hidden" id="staff_id" name="staff_id" value="">
+      <button class="btn btn-warning">
+        Sorry, I can't make it!
+      </button>
+
+    </form>
+  <% else %>
+    <h4><strong>Job currently assigned to <a href = "/staffs/<%= @job.staff.id %>"><%= @job.staff.first_name %></a> </strong></h4>
+  <% end %>
+
+</div>
+</div>
+<br />
+
+
+<% end %>
+<% end %>
+
+<% if @job.restaurant.user_id == current_user.id %>
+
+  <h3><%= @job.restaurant.restaurant_name %> Job Description</h3><br />
+  <div class="col-md-12 mb-2">
+    <div class="panel panel-primary">
+      <div class="panel-body" style="text-align: center;">
+    <h4><a href="/roles/<%= @job.role.id %>"><%= @job.role.role_name %></a></h4><h4><%= @job.start_time.strftime("%A, %B %C") %></h4>
+    <h4><%= @job.start_time.strftime("%l:%M %p") %> - <%= @job.end_time.strftime("%l:%M %p") %></h4>
+    <h4>$<%= @job.hourly_rate.to_i %> per hour + tips</h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+      <div class="col-md-12 mb-2">
+  <div class="btn-group btn-group-justified">
+      <a href="/delete_job/<%= @job.id %>" class="btn btn-primary">
+        Delete
+      </a>
+    </div>
+  </div>
+  </div>
+
+<% if @job.staff_id != nil %>
+
+<% if @job.approved != TRUE %>
+  <h3>Staff member awaiting approval:</h3>
+<form action="/update_job/<%= @job.id %>" method="post">
+  <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+    <input type="hidden" id="start_time" name="start_time" value="<%= @job.start_time %>">
+    <input type="hidden" id="end_time" name="end_time" value="<%= @job.end_time %>">
+    <input type="hidden" id="role_id" name="role_id" value="<%= @job.role_id %>">
+    <input type="hidden" id="hourly_rate" name="hourly_rate" value="<%= @job.hourly_rate %>">
+    <input type="hidden" id="approved" name="approved" value="1">
+    <input type="hidden" id="staff_id" name="staff_id" value="<%= @job.staff.id %>">
+    <div><label for="photo"><%= @job.staff.first_name %> <%=  @job.staff.last_name %></label></div>
+    <button id = "photo" style="height:162px; width:162px; background: url(<%=  @job.staff.avatar_url %>) no-repeat center; background-size: 140%">
+    </button>
+
+
+  </form>
+<% else %>
+  <h3>Staff member currently selected:</h3>
+ <form action="/staffs/<%= @job.staff_id %>" method="get">
+    <div><label for="photo"><%= @job.staff.first_name %> <%=  @job.staff.last_name %></label></div>
+    <button id = "photo" style="height:162px; width:162px; background: url(<%=  @job.staff.avatar_url %>) no-repeat center; background-size: 140%">
+    </button>
+  </form>
+
+<% end %>
+
+  <h3>Select a different staff member:</h3>
+<% else %>
+  <h3>Assign staff member:</h3> <br />
+<% end %>
+  <h4><%= @job.restaurant.restaurant_name %> staff </h4>
+
+<div class="row">
+
+<% @staffs.each do |staff| %>
+  <div class="col-md-2 mb-2">
+    <form action="/update_job/<%= @job.id %>" method="post">
+      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+        <input type="hidden" id="start_time" name="start_time" value="<%= @job.start_time %>">
+        <input type="hidden" id="end_time" name="end_time" value="<%= @job.end_time %>">
+        <input type="hidden" id="role_id" name="role_id" value="<%= @job.role_id %>">
+        <input type="hidden" id="hourly_rate" name="hourly_rate" value="<%= @job.hourly_rate %>">
+        <input type="hidden" id="approved" name="approved" value="1">
+        <input type="hidden" id="staff_id" name="staff_id" value="<%= staff.id %>">
+        <div><label for="photo"><%= staff.first_name %> <%= staff.last_name %></label></div>
+        <button id = "photo" style="height:162px; width:162px; background: url(<%= staff.avatar_url %>) no-repeat center; background-size: 140%">
+        </button>
+
+
+      </form>
+    </div>
+
+  <% end %>
+</div>
+
+<br /><h4>Other staff</h4>
+
+<div class="row">
+  <% @staffs_other.each do |staff| %>
+    <div class="col-md-2 mb-2">
+      <form action="/update_job/<%= @job.id %>" method="post">
+        <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+          <input type="hidden" id="start_time" name="start_time" value="<%= @job.start_time %>">
+          <input type="hidden" id="end_time" name="end_time" value="<%= @job.end_time %>">
+          <input type="hidden" id="role_id" name="role_id" value="<%= @job.role_id %>">
+          <input type="hidden" id="hourly_rate" name="hourly_rate" value="<%= @job.hourly_rate %>">
+          <input type="hidden" id="approved" name="approved" value="1">
+          <input type="hidden" id="staff_id" name="staff_id" value="<%= staff.id %>">
+          <div><label for="photo"><%= staff.first_name %> <%= staff.last_name %></label></div>
+          <button id = "photo" style="height:162px; width:162px; background: url(<%= staff.avatar_url %>) no-repeat center; background-size: 140%">
+          </button>
+
+
+        </form>
+      </div>
+
+    <% end %>
+</div>
+<br />
+      <% end %>
+<div class="row">
+<div class="col-md-12 mb-2">
+  <div class="btn-group btn-group-justified">
+      <a href="/restaurants/<%= @job.restaurant.id %>" class="btn btn-primary">
+        Back
+      </a>
+    </div>
+    </div>
 </div>

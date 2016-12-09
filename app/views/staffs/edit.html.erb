@@ -1,4 +1,4 @@
-<!-- Validation failure messages -->
+
 <% if @staff.errors.any? %>
   <% @staff.errors.full_messages.each do |message| %>
     <div class="alert alert-dismissable alert-danger">
@@ -8,8 +8,11 @@
   <% end %>
 <% end %>
 
+<% if @staff.user_id == current_user.id %>
+
 <div class="page-header">
-  <h3>Edit Staff #<%= @staff.id %></h3>
+  <h3>Edit Profile: <%= @staff.first_name %>
+<a href="/users/edit" class="btn btn btn-warning" style="float: right;">Need to change your email or password?</a></h3>
 </div>
 
 <div class="row">
@@ -63,17 +66,46 @@
         <%= select_tag(:home_restaurant_id, options_from_collection_for_select(Restaurant.all, :id, :restaurant_name, @staff.home_restaurant_id), :class => "form-control") %>
       </div>
 
+      <input type="hidden" name="role_id" "<%= @staff.role_id %>">
+      <input type="hidden" name="user_id" value="<%= @staff.user_id %>">
+      <input type="hidden" name="verified" value="<%= @staff.verified %>">
+
+      <button class="btn btn-warning">
+        Update Profile
+      </button>
+      or
+      <a href="/staffs/<%= @staff.id %>">Cancel</a>
+    </form>
+  </div>
+</div>
+
+<% elsif @staff.home_restaurant.user_id == current_user.id %>
+
+<div class="page-header">
+  <h3>Verify Staff: <%= @staff.first_name %></h3>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form action="/update_staff/<%= @staff.id %>" method="post">
+      <!-- Hidden input for authenticity token to protect from forgery -->
+      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+
+<input type="hidden" name="first_name" value="<%= @staff.first_name %>">
+<input type="hidden" name="last_name" value="<%= @staff.last_name %>">
+<input type="hidden" name="contact_telephone" value="<%= @staff.contact_telephone %>">
+<input type="hidden" name="avatar_url" value="<%= @staff.avatar_url %>">
+<input type="hidden" name="home_restaurant_id" value="<%= @staff.home_restaurant_id %>">
+<input type="hidden" name="user_id" value="<%= @staff.user_id %>">
+
       <!-- Label and input for role_id -->
       <div class="form-group">
         <label for="role_id" class="control-label">
           Role
         </label>
-
-        <input type="text" id="role_id" name="role_id" placeholder="Role" class="form-control" value="<%= @staff.role_id %>">
+        <%= select_tag(:role_id, options_from_collection_for_select(Role.where(restaurant: @staff.home_restaurant_id), :id, :role_name, @staff.role_id), :class => "form-control") %>
       </div>
-
-      
-      
 
       <!-- Label and input for verified -->
       <div class="checkbox">
@@ -83,11 +115,22 @@
         </label>
       </div>
 
-      <button class="btn btn-warning">
-        Update Staff
-      </button>
-      or
-      <a href="/staffs/<%= @staff.id %>">Cancel</a>
-    </form>
-  </div>
-</div>
+            <button class="btn btn-warning">
+              Update Profile
+            </button>
+            or
+            <a href="/staffs/<%= @staff.id %>">Cancel</a>
+          </form>
+        </div>
+      </div>
+    <% else %>
+    <br />
+    <div class="alert alert-danger">
+      <strong>Unauthorized action:</strong> You are not authorized to perform this action!
+    </div>
+    <div class="btn-group btn-group-justified">
+      <a href="/" class="btn btn-primary">
+        <i class="glyphicon glyphicon-home"></i>  Home
+      </a>
+    </div>
+    <% end %>

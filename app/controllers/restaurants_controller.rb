@@ -11,7 +11,7 @@ class RestaurantsController < ApplicationController
 
   def index
     @q = Restaurant.ransack(params[:q])
-    @restaurants = @q.result(:distinct => true).includes(:user, :staffs, :roles, :shifts).page(params[:page]).per(10)
+    @restaurants = @q.result(:distinct => true).includes(:user, :staffs, :roles, :shifts).page(params[:page]).per(12)
 
     render("restaurants/index.html.erb")
   end
@@ -20,6 +20,14 @@ class RestaurantsController < ApplicationController
     @role = Role.new
     @staff = Staff.new
     @restaurant = Restaurant.find(params[:id])
+    @staff_verified = @restaurant.staffs.where.not(verified: nil)
+    @staff_unverified = @restaurant.staffs.where(verified: nil)
+
+    @roles = Role.where(restaurant_id: @restaurant.id)
+    @j = Job.ransack(params[:j])
+    @shifts_a = @j.result(:distinct => true).where(role: @roles, staff: nil).includes(:staff, :role, :restaurant).page(params[:unassigned]).per(6).order(:start_time)
+    @shifts_b = @j.result(:distinct => true).where(role: @roles, approved: TRUE).where.not(staff: nil).includes(:staff, :role, :restaurant).page(params[:upcoming]).per(6).order(:start_time)
+    @shifts_c = @j.result(:distinct => true).where(role: @roles, approved: nil).where.not(staff: nil).includes(:staff, :role, :restaurant).page(params[:pending]).per(6).order(:start_time)
 
     render("restaurants/show.html.erb")
   end
